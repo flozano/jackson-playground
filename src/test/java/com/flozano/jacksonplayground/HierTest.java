@@ -43,8 +43,8 @@ public class HierTest {
 	@Test
 	public void testSerializationInPlainCollection() throws JSONException,
 			JsonProcessingException {
-		JSONArray arr = new JSONArray(mapper.writeValueAsString(Arrays
-				.<Animal> asList(snake, kangaroo, dog, cat)));
+		JSONArray arr = new JSONArray(mapper.writeValueAsString(Arrays.asList(
+				snake, kangaroo, dog, cat)));
 		System.err.println(arr);
 		for (int i = 0; i < arr.length(); i++) {
 			assertNotNull(arr.getJSONObject(i).optString("behaves", null));
@@ -56,8 +56,11 @@ public class HierTest {
 			throws JSONException, JsonProcessingException {
 		JSONArray arr = new JSONArray(mapper.writerWithType(
 				mapper.getTypeFactory().constructCollectionType(List.class,
-						Animal.class)).writeValueAsString(
-				Arrays.<Animal> asList(snake, kangaroo, dog, cat)));
+						Object.class)).writeValueAsString(
+				Arrays.asList(snake, kangaroo, dog, cat)));
 		System.err.println(arr);
+		for (int i = 0; i < arr.length(); i++) {
+			assertNotNull(arr.getJSONObject(i).optString("behaves", null));
+		}
 	}
 }
