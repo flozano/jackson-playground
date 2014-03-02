@@ -3,7 +3,9 @@ package com.flozano.jacksonplayground;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,12 +15,9 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flozano.jacksonplayground.Animal.Cat;
-import com.flozano.jacksonplayground.Animal.Dog;
-import com.flozano.jacksonplayground.Animal.Kangaroo;
-import com.flozano.jacksonplayground.Animal.Snake;
 
 public class HierTest {
+
 	// quite silly data model...
 	final Kangaroo kangaroo = new Kangaroo("Bob");
 	final Snake snake = new Snake("Lisa");
@@ -26,6 +25,11 @@ public class HierTest {
 	final Cat cat = new Cat("Esther");
 
 	ObjectMapper mapper;
+
+	Set<String> validValuesForKind = new HashSet<String>(
+			Arrays.<String> asList("WILD", "DOMESTIC"));
+	Set<String> validValuesForBehaves = new HashSet<String>(
+			Arrays.<String> asList("NICE", "NASTY"));
 
 	@Before
 	public void setUp() {
@@ -48,6 +52,12 @@ public class HierTest {
 		System.err.println(arr);
 		for (int i = 0; i < arr.length(); i++) {
 			assertNotNull(arr.getJSONObject(i).optString("behaves", null));
+			assertNotNull(arr.getJSONObject(i).optString("kind", null));
+
+			assertTrue(validValuesForBehaves.contains(arr.getJSONObject(i)
+					.getString("behaves")));
+			assertTrue(validValuesForKind.contains(arr.getJSONObject(i)
+					.getString("kind")));
 		}
 	}
 
@@ -59,5 +69,17 @@ public class HierTest {
 						Animal.class)).writeValueAsString(
 				Arrays.<Animal> asList(snake, kangaroo, dog, cat)));
 		System.err.println(arr);
+		// Weird result:
+		// [{"snakeName":"Lisa","kind":"NASTY"},{"kangarooName":"Bob","kind":"NICE"},{"dogName":"Maria","kind":"NICE"},{"catName":"Esther","kind":"NASTY"}]
+		// "kind" is filled with values for "behaves" :?
+		for (int i = 0; i < arr.length(); i++) {
+			assertNotNull(arr.getJSONObject(i).optString("behaves", null));
+			assertNotNull(arr.getJSONObject(i).optString("kind", null));
+
+			assertTrue(validValuesForBehaves.contains(arr.getJSONObject(i)
+					.getString("behaves")));
+			assertTrue(validValuesForKind.contains(arr.getJSONObject(i)
+					.getString("kind")));
+		}
 	}
 }
