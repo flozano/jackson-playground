@@ -3,14 +3,14 @@ package com.flozano.jacksonplayground;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-public class Animal {
+public interface Animal {
 
 	/** Domestic animals **/
 
 	@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "behaves", visible = true)
 	@JsonSubTypes({ @JsonSubTypes.Type(value = Dog.class, name = "NICE"),
 			@JsonSubTypes.Type(value = Cat.class, name = "NASTY") })
-	public static class DomesticAnimal extends Animal {
+	public static class DomesticAnimal implements Animal {
 
 	}
 
@@ -43,7 +43,7 @@ public class Animal {
 	@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "behaves", visible = true)
 	@JsonSubTypes({ @JsonSubTypes.Type(value = Kangaroo.class, name = "NICE"),
 			@JsonSubTypes.Type(value = Snake.class, name = "NASTY") })
-	public static class WildAnimal extends Animal {
+	public static class WildAnimal implements Animal {
 
 	}
 
